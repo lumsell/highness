@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Dungeon_Time.mp3-7bafb870bc15e0e39b320e094841602b.mp3str"
+
+[deps]
+
+source_file="res://music/Dungeon_Time.mp3"
+dest_files=[ "res://.import/Dungeon_Time.mp3-7bafb870bc15e0e39b320e094841602b.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
