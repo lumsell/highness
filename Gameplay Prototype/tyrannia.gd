@@ -8,7 +8,7 @@ var moveDown = false
 
 func _ready():
 	pass # Replace with function body.
-	
+
 func _input(event):
 	if event.is_action_pressed("ui_left"):
 		moveLeft = true
@@ -29,11 +29,21 @@ func _input(event):
 
 func _process(delta):
 	if moveLeft == true:
-		position.x -= speed * delta
+		$RayCastLeft.force_raycast_update()
+		$RayCastLeft2.force_raycast_update()
+		if !$RayCastLeft.is_colliding() || !$RayCastLeft2.is_colliding():
+			position.x -= speed * delta
 	if moveRight == true:
-		position.x += speed * delta
+		$RayCastRight.force_raycast_update()
+		$RayCastRight2.force_raycast_update()
+		if !$RayCastRight.is_colliding() || !$RayCastRight2.is_colliding():
+			position.x += speed * delta
 	if moveUp == true:
-		position.y -= speed * delta
+		$RayCastUp.force_raycast_update()
+		if !$RayCastUp.is_colliding():
+			position.y -= speed * delta
 	if moveDown == true:
-		position.y += speed * delta
+		$RayCastDown.force_raycast_update()
+		if !$RayCastDown.is_colliding():
+			position.y += speed * delta
 
