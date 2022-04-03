@@ -6,6 +6,7 @@
 [node name="overworld" type="Node2D"]
 
 [node name="tyrannia" parent="." instance=ExtResource( 1 )]
+position = Vector2( 523, 293 )
 
 [node name="background" type="Sprite" parent="."]
 position = Vector2( 512, 303 )
@@ -13,7 +14,7 @@ scale = Vector2( 0.4, 0.4 )
 z_index = -1
 texture = ExtResource( 2 )
 
-[node name="walls" type="Area2D" parent="." groups=["SolidWall"]]
+[node name="walls" type="StaticBody2D" parent="."]
 
 [node name="Polygon2D" type="Polygon2D" parent="walls"]
 color = Color( 0.670588, 0.670588, 0.670588, 1 )

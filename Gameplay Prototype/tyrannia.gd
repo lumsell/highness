@@ -1,6 +1,6 @@
 extends Node2D
 
-var speed = 50
+var speed = 100
 var moveLeft = false
 var moveRight = false
 var moveUp = false
@@ -27,23 +27,16 @@ func _input(event):
 	if event.is_action_released("ui_down"):
 		moveDown = false
 
-func _process(delta):
-	if moveLeft == true:
-		$RayCastLeft.force_raycast_update()
-		$RayCastLeft2.force_raycast_update()
-		if !$RayCastLeft.is_colliding() || !$RayCastLeft2.is_colliding():
-			position.x -= speed * delta
-	if moveRight == true:
-		$RayCastRight.force_raycast_update()
-		$RayCastRight2.force_raycast_update()
-		if !$RayCastRight.is_colliding() || !$RayCastRight2.is_colliding():
-			position.x += speed * delta
-	if moveUp == true:
-		$RayCastUp.force_raycast_update()
-		if !$RayCastUp.is_colliding():
-			position.y -= speed * delta
-	if moveDown == true:
-		$RayCastDown.force_raycast_update()
-		if !$RayCastDown.is_colliding():
-			position.y += speed * delta
+func _physics_process(delta):
+	var movement := Vector2(0,0) 
+	if moveLeft:
+		movement += Vector2.LEFT
+	if moveRight:
+		movement += Vector2.RIGHT
+	if moveUp: 
+		movement += Vector2.UP
+	if moveDown:
+		movement += Vector2.DOWN
+	movement *= (speed)
+	var collision = $KinematicBody2D.move_and_slide(movement)
 
