@@ -26,13 +26,13 @@ polygon = PoolVector2Array( 378, -17, 377, 389, 238, 389, 240, 416, 410, 413, 41
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="walls"]
 polygon = PoolVector2Array( -102, -112, 1128, -117, 1128, 693, -104, 689, -102, 622, 110, 621, 111, 119, 258, 112, 265, 250, 234, 249, 236, 146, 137, 147, 139, 619, 141, 626, 540, 628, 538, 419, 561, 420, 568, 619, 1022, 624, 1023, 311, 848, 304, 845, 283, 1029, 281, 1019, -10, 629, -16, 632, 136, 852, 140, 852, 167, 688, 167, 705, 438, 859, 431, 864, 467, 663, 471, 661, 161, 605, 168, 606, -9, 408, -13, 411, 410, 238, 413, 240, 387, 378, 389, 377, -18, -2, -17, 2, 634, -105, 587 )
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 3 )
-volume_db = -11.362
-autoplay = true
-
 [node name="grumpkin" parent="." instance=ExtResource( 4 )]
 position = Vector2( -23, 0 )
 
 [node name="grumpkin2" parent="." instance=ExtResource( 4 )]
 position = Vector2( -669, 505 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -11.361
+autoplay = true
