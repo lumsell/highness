@@ -1,13 +1,16 @@
 extends Node2D
 
-var speed = 100
+var speed = 70
 var moveLeft = false
 var moveRight = false
 var moveUp = false
 var moveDown = false
+var animationTree = null
+var animationState = null
 
 func _ready():
-	pass # Replace with function body.
+	animationTree = $AnimationTree
+	animationState = animationTree.get("parameters/playback")
 
 func _input(event):
 	if event.is_action_pressed("ui_left"):
@@ -39,4 +42,8 @@ func _physics_process(delta):
 		movement += Vector2.DOWN
 	movement *= (speed)
 	var collision = $KinematicBody2D.move_and_slide(movement)
+	if moveLeft == true || moveRight == true || moveUp == true || moveDown == true:
+		animationState.travel("walk")
+	else:
+		animationState.travel("idle")
 
