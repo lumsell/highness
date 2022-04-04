@@ -29,6 +29,10 @@ func _input(event):
 		moveUp = false
 	if event.is_action_released("ui_down"):
 		moveDown = false
+	if event.is_action_pressed("run"):
+		speed = 120
+	if event.is_action_released("run"):
+		speed = 70
 
 func _physics_process(delta):
 	var movement := Vector2(0,0) 
