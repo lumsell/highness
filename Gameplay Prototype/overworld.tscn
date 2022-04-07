@@ -32,7 +32,7 @@ position = Vector2( -23, 0 )
 [node name="grumpkin2" parent="." instance=ExtResource( 4 )]
 position = Vector2( -669, 505 )
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="dungeonmusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 volume_db = -11.361
 autoplay = true
