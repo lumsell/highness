@@ -13,4 +13,5 @@ func _ready():
 
 func registerBattler(battler):
 	characterList.append(battler)
+	#character objects have to register themselves with the battle controller
 
