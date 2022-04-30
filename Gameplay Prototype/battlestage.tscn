@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://music/Round_1.simpleloop.mp3" type="AudioStream" id=1]
-[ext_resource path="res://art/atlas_transparent.png" type="Texture" id=2]
+[ext_resource path="res://allyBattler.tscn" type="PackedScene" id=2]
 [ext_resource path="res://art/tyrannia_transparent.png" type="Texture" id=3]
 [ext_resource path="res://art/freddie_transparent.png" type="Texture" id=4]
 [ext_resource path="res://grumpkinbattle.tscn" type="PackedScene" id=5]
+[ext_resource path="res://battleController.gd" type="Script" id=6]
 
 [node name="battlestage" type="Node2D"]
 
@@ -23,13 +24,13 @@ position = Vector2( 353, 127 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 4 )
 
-[node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 353, 470 )
-scale = Vector2( -0.1, 0.1 )
-texture = ExtResource( 2 )
+[node name="allyBattler" parent="." instance=ExtResource( 2 )]
 
 [node name="grumpkinbattle" parent="." instance=ExtResource( 5 )]
 position = Vector2( 15, 21 )
 
 [node name="grumpkinbattle2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 15, 252 )
+
+[node name="battleController" type="Node" parent="."]
+script = ExtResource( 6 )
