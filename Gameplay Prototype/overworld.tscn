@@ -20,7 +20,7 @@ position = Vector2( 523, 293 )
 position = Vector2( -23, 0 )
 
 [node name="grumpkin2" parent="." instance=ExtResource( 4 )]
-position = Vector2( -669, 505 )
+position = Vector2( -676, 493 )
 
 [node name="dungeonmusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
