@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ArtAssets/enemy-stand_static.png" type="Texture" id=1]
+[ext_resource path="res://EnemyCharacter.gd" type="Script" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 256.442
+
+[node name="EnemyCharacter" type="Sprite"]
+position = Vector2( 149.216, 133.342 )
+scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 2.32739, 19.8112 )
+shape = SubResource( 1 )
+
+[connection signal="input_event" from="Area2D" to="." method="_on_Area2D_input_event"]
