@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=40 format=2]
+[gd_resource type="TileSet" load_steps=56 format=2]
 
 [ext_resource path="res://art/tiles/fulltesttileset.png" type="Texture" id=1]
 
@@ -37,6 +37,70 @@ points = PoolVector2Array( 32, 32, 0, 32, 0, 29.2141, 32, 29.2141 )
 
 [sub_resource type="ConvexPolygonShape2D" id=12]
 points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[sub_resource type="NavigationPolygon" id=39]
+vertices = PoolVector2Array( 32, 32, 0, 32, 0, 0.0940933, 32, 0.0940933 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=40]
+vertices = PoolVector2Array( 27.9089, 27.6139, 4.24389, 27.6139, 4.24389, 4.28531, 27.9089, 4.28531 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=41]
+vertices = PoolVector2Array( 32, 28.3783, 0, 28.3783, 0, 0, 32, 0 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=42]
+vertices = PoolVector2Array( 0, 3.7619, 28.4717, 3.85537, 28.5652, 28.7168, 0, 28.9971 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=43]
+vertices = PoolVector2Array( 0, 0, 27.5017, 0.206253, 27.3896, 4.13173, 31.988, 4.01958, 32, 32, 0, 32 )
+polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5 ) ]
+
+[sub_resource type="NavigationPolygon" id=44]
+vertices = PoolVector2Array( 32, 32, 3.66844, 32, 3.66844, 0, 32, 0 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=45]
+vertices = PoolVector2Array( 32, 27.7821, 0, 27.7821, 0, 3.94884, 32, 3.94884 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=46]
+vertices = PoolVector2Array( 27.8028, 32, 27.8028, 28.4697, 32, 28.3576, 32, 0, 0, 0, 0, 32 )
+polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5 ) ]
+
+[sub_resource type="NavigationPolygon" id=47]
+vertices = PoolVector2Array( 0, 3.32996, 31.6722, 3.70381, 32, 32, 0, 32 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=48]
+vertices = PoolVector2Array( 3.44614, 29.5579, 32, 29.5579, 32, 0, 3.44614, 0 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=49]
+vertices = PoolVector2Array( 0, 28.2454, 3.45352, 28.3576, 3.56567, 31.9466, 32, 32, 32, 0, 0, 0 )
+polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5 ) ]
+
+[sub_resource type="NavigationPolygon" id=50]
+vertices = PoolVector2Array( 28.7635, 0, 0.163589, 0, 0, 32, 28.857, 32 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=51]
+vertices = PoolVector2Array( 28.6701, 3.29459, 0.163589, 3.29459, 0.163589, 32, 28.6701, 32 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=52]
+vertices = PoolVector2Array( 0, 4.13173, 3.5303, 3.90742, 3.306, 0, 32, 0, 32, 32, 0, 32 )
+polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5 ) ]
+
+[sub_resource type="NavigationPolygon" id=53]
+vertices = PoolVector2Array( 28.8216, 0, 0.22168, 0, 0.22168, 28.5652, 28.8216, 28.5652 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="NavigationPolygon" id=54]
+vertices = PoolVector2Array( 3.86678, 3.94884, 32, 3.94884, 32, 32, 3.86678, 32 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
 
 [sub_resource type="ConvexPolygonShape2D" id=13]
 points = PoolVector2Array( 32, 3.27187, 28.3665, 3.1784, 28.46, 0, 32, 0 )
@@ -503,7 +567,7 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 28.5093, 32, 28.1055, 3.37327, 0
 17/autotile/tile_size = Vector2( 32, 32 )
 17/autotile/spacing = 0
 17/autotile/occluder_map = [  ]
-17/autotile/navpoly_map = [  ]
+17/autotile/navpoly_map = [ Vector2( 0, 0 ), SubResource( 39 ), Vector2( 0, 2 ), SubResource( 40 ), Vector2( 1, 1 ), SubResource( 41 ), Vector2( 1, 2 ), SubResource( 42 ), Vector2( 2, 0 ), SubResource( 43 ), Vector2( 2, 1 ), SubResource( 44 ), Vector2( 2, 2 ), SubResource( 45 ), Vector2( 3, 0 ), SubResource( 46 ), Vector2( 3, 1 ), SubResource( 47 ), Vector2( 3, 2 ), SubResource( 48 ), Vector2( 4, 0 ), SubResource( 49 ), Vector2( 4, 1 ), SubResource( 50 ), Vector2( 4, 2 ), SubResource( 51 ), Vector2( 5, 0 ), SubResource( 52 ), Vector2( 5, 1 ), SubResource( 53 ), Vector2( 5, 2 ), SubResource( 54 ) ]
 17/autotile/priority_map = [  ]
 17/autotile/z_index_map = [  ]
 17/occluder_offset = Vector2( 0, 0 )
