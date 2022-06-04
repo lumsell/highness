@@ -1,4 +1,4 @@
-extends Node2D
+extends KinematicBody2D
 
 var speed = 70
 var moveLeft = false
@@ -45,9 +45,10 @@ func _physics_process(delta):
 	if moveDown:
 		movement += Vector2.DOWN
 	movement *= (speed)
-	var collision = $KinematicBody2D.move_and_slide(movement)
+	var collision = move_and_slide(movement)
 	if moveLeft == true || moveRight == true || moveUp == true || moveDown == true:
 		animationState.travel("walk")
 	else:
 		animationState.travel("idle")
+		
 

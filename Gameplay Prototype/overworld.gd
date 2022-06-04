@@ -1,7 +1,7 @@
 extends Node2D
 
 onready var nav2d : Navigation2D = $Navigation2D
-onready var player : Node2D = $tyrannia
+onready var player : KinematicBody2D = $tyrannia
 onready var enemy1 : Node2D	 = $grumpkin
 onready var enemy2 : Node2D = $grumpkin2
 onready var debugLine : Line2D = $debugPathLine
@@ -20,7 +20,7 @@ func _process(delta):
 	
 	debugLine.points = enemy1.path
 	debugLine2.points = enemy2.path
-		
+	
 	
 func get_path_to_player(player, enemy):
 	return nav2d.get_simple_path(enemy.position, player.position)
