@@ -1,5 +1,7 @@
 extends Button
 
+var action_list
+
 signal selection_made(selection_sig)
 
 var signature
@@ -28,3 +30,9 @@ func get_id():
 	
 func _on_BaseActionButton_pressed() -> void:
 	emit_signal("selection_made", id)
+
+func set_action_list(new_action_list):
+	action_list = new_action_list
+
+func get_action_list():
+	return action_list

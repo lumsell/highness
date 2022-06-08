@@ -7,6 +7,8 @@ extends ItemList
 
 var id
 
+var id_list = Array()
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -22,3 +24,11 @@ func get_id():
 func load_items(items):
 	for item in items:
 		add_item(item)
+
+func get_id_at(index):
+	var id = id_list[index]
+	return id
+
+func load_node(action):
+	add_item(action.get_name())
+	id_list.append(action.get_id())

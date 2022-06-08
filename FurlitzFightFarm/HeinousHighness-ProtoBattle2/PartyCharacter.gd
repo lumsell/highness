@@ -2,7 +2,6 @@ extends Sprite
 
 #testest
 # BaseActionList is the generic scene used to generate action lists
-var ability_list_base = preload("res://BaseActionList.tscn")
 
 # Sent to the BattleController to tell it the ID of the player's currently
 # selected action
@@ -12,19 +11,33 @@ signal active_action(action_id)
 # ATM they're stand-ins that don't actually mean anything and this whole system
 # will likely be changed when actual Action nodes are added
 
-# this String array is used to generate all the ActionButtons
-var available_actions = ["Attack", "Defend", "Magic"]
+# this String array is used to generate all the ActionButtons - not yet though,
+# will need to be updated
+var action_categories = ["Attack", "Defend", "Magic"]
 # these String arrays are used to generate ActionLists for each ActionButton
+# old, will remove later
 var attack_array = ["Slap", "Punch", "Insult"]
 var defend_array = ["Block", "Duck", "Beg"]
 var magic_array = ["Abracadabra", "Skiddadle skidoodle", "zoot suit"]
 
+var available_actions = ["as0001", "ad0001", "am0001"]
+
 # Generates and shows the active character's action menu
 func _ready() -> void:
-	$CombatMenu.add_action_button("Attack", attack_array)
-	$CombatMenu.add_action_button("Defend", defend_array)
-	$CombatMenu.add_action_button("Magic", magic_array)
+	build_combat_menu(action_categories, available_actions)
 	$CombatMenu.show()
+
+func build_combat_menu(action_categories, total_action_list):
+	
+	$CombatMenu.add_action_buttons(action_categories)
+	
+	for action in total_action_list:
+		var action_scene = load("res://" + action + ".tscn")
+		var action_node = action_scene.instance()
+		add_child(action_node)
+		$CombatMenu.add_action(action_node)
+		
+		print("added " + action)
 
 # I think this is an old tester function that doesn't do anything anymore but
 # I'm scared to delete it

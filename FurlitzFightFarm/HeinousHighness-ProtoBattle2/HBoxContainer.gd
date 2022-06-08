@@ -12,47 +12,61 @@ signal action_selected(action_name)
 # BaseActionButton and BaseActionList are generic scene nodes with the premade
 # functionality to build a unique Action Menu
 var action_button = preload("res://BaseActionButton.tscn")
-var ability_list = preload("res://BaseActionList.tscn")
+var action_list = preload("res://BaseActionList.tscn")
 
 var current_list
 
-# num_buttons is a counter, given to a button as its ID when it's added to the
-# menu in order to match the button to an index in the array list_array where 
-# the button's corresponding ActionList is stored
-
-# this is kind of a messy solution and is supposed to be temporary
-var num_buttons
-
 # list_array stores ActionLists at indexes that correspond to Button IDs
-var list_array=[]
+# As it's set up now, the array generally be bigger than it needs to be
+# because these indexes are hard-coded so that there will have to be one
+# for every possible button, even if the character won't use is
+var attack_index = 0
+var defend_index = 1
+var magic_index = 2
+
+var list_array = [attack_index, defend_index, magic_index]
 
 # Sets up and initially hides the empty combat menu until the character fills it
 func _ready() -> void:
-	num_buttons = 0
 	hide()
 
-# Makes and adds a new ActionButton and its corresponding ActionList
-# @args action_sig the ID signature of an action, for now just used as its name
-# @args ability_array the array containing all the actions of the button's
-# category
-func add_action_button(action_sig, ability_array):
-	var new_button = action_button.instance()
-	var test = "selection_made"
-	new_button.set_signature(action_sig)
-	new_button.set_id(num_buttons)
-	new_button.connect("selection_made", self, "_on_ActionButton_" + test)
-	$ActionMenu.add_child(new_button)
-	
-	#the newly created list is stored in an array at an index that should
-	#match the int value of the id variable stored in the new button
-	var new_list = ability_list.instance()
-	new_list.load_items(ability_array)
-	new_list.connect("item_selected", self, "_on_ActionList_item_selected")
-	
-	list_array.append([])
-	list_array[num_buttons] = new_list
-	
-	num_buttons += 1
+# Adds all ActionButtons that a character should have access to and creates a
+# corresponding ActionList that can be displayed when the button is clicked
+func add_action_buttons(category_array):
+	for category in category_array:
+		var new_button = action_button.instance()
+		new_button.set_signature(category)
+		new_button.connect("selection_made", self, "_on_ActionButton_selection_made")
+		$ActionMenu.add_child(new_button)
+		
+		# The Button ids match to the index in the array where the appropriate
+		# ActionList is stored
+		match category:
+			"Attack":
+				new_button.set_id(attack_index)
+			"Defend":
+				new_button.set_id(defend_index)
+			"Magic":
+				new_button.set_id(magic_index)
+		
+		var new_action_list = action_list.instance()
+		new_action_list.connect("item_selected", self, "_on_ActionList_item_selected")
+		#connects the button to an action list via a pointer in the button
+		list_array[new_button.get_id()] = new_action_list
+		print(new_button.get_id())
+		print(new_button.get_text())
+
+# Checks the second character in the id String and uses that to add
+# the action to the appropriate list
+func add_action(action):
+	match action.get_id().substr(1,1):
+		"s": # "s" stands for strike which means attack, because "a" is action
+			# could be changed later, depending on which is more confusing
+			list_array[attack_index].load_node(action)
+		"d":
+			list_array[defend_index].load_node(action)
+		"m":
+			list_array[magic_index].load_node(action)
 
 # Brings up the corresponding AbilityList when an ActionButton is pressed
 func _on_ActionButton_selection_made(button_id):
@@ -72,7 +86,7 @@ func _on_ActionButton_selection_made(button_id):
 # Sends the "action_selected" signal when the player clicks on an item from an
 # ActionList
 func _on_ActionList_item_selected(index):
-	var selected_ability = current_list.get_item_text(index)
+	var selected_ability = current_list.get_id_at(index)
 	selected_ability = selected_ability
 	print("From Combat Menu: " + selected_ability)
 	emit_signal("action_selected", selected_ability)
