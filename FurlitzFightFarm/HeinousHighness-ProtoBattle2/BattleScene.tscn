@@ -14,9 +14,9 @@ font_data = SubResource( 1 )
 [node name="BattleScene" type="Node"]
 script = ExtResource( 2 )
 
-[node name="Sprite" parent="." instance=ExtResource( 1 )]
+[node name="cp0001" parent="." instance=ExtResource( 1 )]
 
-[node name="EnemyCharacter" parent="." instance=ExtResource( 3 )]
+[node name="ce0001" parent="." instance=ExtResource( 3 )]
 position = Vector2( 886.216, 126.342 )
 
 [node name="Announcer" type="Label" parent="."]
@@ -29,5 +29,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="active_action" from="Sprite" to="." method="_on_Sprite_active_action"]
-[connection signal="enemy_targeted" from="EnemyCharacter" to="." method="_on_EnemyCharacter_enemy_targeted"]
+[connection signal="active_action" from="cp0001" to="." method="_on_Sprite_active_action"]
+[connection signal="enemy_targeted" from="ce0001" to="." method="_on_EnemyCharacter_enemy_targeted"]

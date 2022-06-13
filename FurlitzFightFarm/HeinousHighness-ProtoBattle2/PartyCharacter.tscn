@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://ArtAssets/lady-tyrant.png" type="Texture" id=1]
 [ext_resource path="res://HBoxContainer.gd" type="Script" id=2]
 [ext_resource path="res://PartyCharacter.gd" type="Script" id=3]
+[ext_resource path="res://StatBlock.tscn" type="PackedScene" id=4]
+[ext_resource path="res://StatDisplay.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://Fonts/ltromatic.ttf"
@@ -43,4 +45,16 @@ margin_left = 143.0
 margin_right = 143.0
 margin_bottom = 315.0
 
+[node name="StatBlock" parent="." instance=ExtResource( 4 )]
+
+[node name="StatDisplay" parent="." instance=ExtResource( 5 )]
+margin_left = -182.496
+margin_top = 518.079
+margin_right = -615.496
+margin_bottom = -294.921
+
 [connection signal="action_selected" from="CombatMenu" to="." method="_on_CombatMenu_action_selected"]
+[connection signal="die" from="StatBlock" to="." method="_on_StatBlock_die"]
+[connection signal="health_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_health_changed"]
+[connection signal="mana_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_mana_changed"]
+[connection signal="stamina_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_stamina_changed"]

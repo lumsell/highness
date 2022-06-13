@@ -4,11 +4,14 @@ extends Sprite
 # is targetting
 signal enemy_targeted(id)
 
-var character_id: String = "Enemy Stand"
-var health
+var character_id: String = "ce0001"
+var health = 15
+var stamina = 15
+var mana = 15
+var strength = 15
 
 func _ready() -> void:
-	health = 15
+	$StatBlock.build(health, stamina, mana, strength)
 
 # Sends the enemy_targeted signal when the character is clicked on
 func _on_Area2D_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
@@ -17,4 +20,8 @@ func _on_Area2D_input_event(viewport: Node, event: InputEvent, shape_idx: int) -
 		emit_signal("enemy_targeted", character_id)
 
 func apply_action(action):
-	pass
+	action.execute($StatBlock)
+
+
+func _on_StatBlock_die() -> void:
+	hide()

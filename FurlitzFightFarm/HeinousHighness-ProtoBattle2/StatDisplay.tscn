@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Fonts/ltromatic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://StatDisplay.gd" type="Script" id=2]
+[ext_resource path="res://HealthLabel.gd" type="Script" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+font_data = ExtResource( 1 )
+
+[node name="StatDisplay" type="VBoxContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthLabel" type="Label" parent="."]
+margin_right = 168.0
+margin_bottom = 38.0
+custom_fonts/font = SubResource( 1 )
+text = "Health:"
+script = ExtResource( 3 )
+
+[node name="StamLabel" type="Label" parent="."]
+margin_top = 42.0
+margin_right = 168.0
+margin_bottom = 80.0
+custom_fonts/font = SubResource( 1 )
+text = "Stamina:"
+
+[node name="ManaLabel" type="Label" parent="."]
+margin_top = 84.0
+margin_right = 168.0
+margin_bottom = 122.0
+custom_fonts/font = SubResource( 1 )
+text = "Mana:"

@@ -83,6 +83,11 @@ func _on_ActionButton_selection_made(button_id):
 		current_list = list_array[button_id]
 		$ListContainer.add_child(current_list)
 	
+func clear_selection():
+	$ListContainer.remove_child(current_list)
+	current_list.unselect_all()
+	current_list = null
+	
 # Sends the "action_selected" signal when the player clicks on an item from an
 # ActionList
 func _on_ActionList_item_selected(index):
@@ -90,3 +95,7 @@ func _on_ActionList_item_selected(index):
 	selected_ability = selected_ability
 	print("From Combat Menu: " + selected_ability)
 	emit_signal("action_selected", selected_ability)
+
+
+func _on_StatBlock_health_changed(new_health) -> void:
+	pass # Replace with function body.

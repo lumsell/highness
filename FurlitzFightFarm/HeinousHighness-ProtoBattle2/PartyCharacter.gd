@@ -22,8 +22,15 @@ var magic_array = ["Abracadabra", "Skiddadle skidoodle", "zoot suit"]
 
 var available_actions = ["as0001", "ad0001", "am0001"]
 
+var health = 15
+var stamina = 15
+var mana = 15
+var strength = 3
+
 # Generates and shows the active character's action menu
 func _ready() -> void:
+	$StatBlock.build(health, stamina, mana, strength)
+	
 	build_combat_menu(action_categories, available_actions)
 	$CombatMenu.show()
 
@@ -34,7 +41,7 @@ func build_combat_menu(action_categories, total_action_list):
 	for action in total_action_list:
 		var action_scene = load("res://" + action + ".tscn")
 		var action_node = action_scene.instance()
-		add_child(action_node)
+		self.add_child(action_node)
 		$CombatMenu.add_action(action_node)
 		
 		print("added " + action)
@@ -56,5 +63,13 @@ func end_turn():
 # This might be an unnecessary step
 # It's useful for now because atm, CombatMenus are generated individually by
 # the characters, but this might change depending on how we handle Action Nodes
-func _on_CombatMenu_action_selected(action_name) -> void:
-	emit_signal("active_action", action_name)
+func _on_CombatMenu_action_selected(action_name):
+	emit_signal("active_action", get_node(action_name))
+
+func perform_action(action):
+	action.perform($StatBlock)
+	$CombatMenu.clear_selection()
+
+func _on_StatBlock_die() -> void:
+	hide()
+
