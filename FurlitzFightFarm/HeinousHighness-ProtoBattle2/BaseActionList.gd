@@ -26,8 +26,8 @@ func load_items(items):
 		add_item(item)
 
 func get_id_at(index):
-	var id = id_list[index]
-	return id
+	var item_id = id_list[index]
+	return item_id
 
 func load_node(action):
 	add_item(action.get_name())

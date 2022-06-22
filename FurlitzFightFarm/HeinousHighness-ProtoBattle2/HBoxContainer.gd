@@ -8,6 +8,7 @@ extends HBoxContainer
 # Sent when the player clicks on an item in an ActionList
 # returns action_name the ID of the selected action, for now just its name
 signal action_selected(action_name)
+signal open_inventory()
 
 # BaseActionButton and BaseActionList are generic scene nodes with the premade
 # functionality to build a unique Action Menu
@@ -23,6 +24,7 @@ var current_list
 var attack_index = 0
 var defend_index = 1
 var magic_index = 2
+var inventory = -1
 
 var list_array = [attack_index, defend_index, magic_index]
 
@@ -48,6 +50,8 @@ func add_action_buttons(category_array):
 				new_button.set_id(defend_index)
 			"Magic":
 				new_button.set_id(magic_index)
+			"Use Item":
+				new_button.set_id(inventory)
 		
 		var new_action_list = action_list.instance()
 		new_action_list.connect("item_selected", self, "_on_ActionList_item_selected")
@@ -71,22 +75,26 @@ func add_action(action):
 # Brings up the corresponding AbilityList when an ActionButton is pressed
 func _on_ActionButton_selection_made(button_id):
 	print(button_id)
+	
 	# if there's a list currently being displayed, its removed and its selection
 	# is clread
 	if current_list != null:
 		$ListContainer.remove_child(current_list)
 		current_list.unselect_all()
 	#if the same button is clicked twice in a row, its just removed
-	if current_list == list_array[button_id]:
+	if button_id == -1:
+		emit_signal("open_inventory")
+	elif current_list == list_array[button_id]:
 		current_list = null
 	else:
 		current_list = list_array[button_id]
 		$ListContainer.add_child(current_list)
 	
 func clear_selection():
-	$ListContainer.remove_child(current_list)
-	current_list.unselect_all()
-	current_list = null
+	if current_list != null:
+		$ListContainer.remove_child(current_list)
+		current_list.unselect_all()
+		current_list = null
 	
 # Sends the "action_selected" signal when the player clicks on an item from an
 # ActionList

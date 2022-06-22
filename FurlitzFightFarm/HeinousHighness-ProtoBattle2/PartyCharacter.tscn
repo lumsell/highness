@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://ArtAssets/lady-tyrant.png" type="Texture" id=1]
 [ext_resource path="res://HBoxContainer.gd" type="Script" id=2]
@@ -12,6 +12,10 @@ font_path = "res://Fonts/ltromatic.ttf"
 [sub_resource type="DynamicFont" id=2]
 size = 28
 font_data = SubResource( 1 )
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 286.784
+height = 279.536
 
 [node name="Sprite" type="Sprite"]
 position = Vector2( 116.673, 113.844 )
@@ -53,8 +57,16 @@ margin_top = 518.079
 margin_right = -615.496
 margin_bottom = -294.921
 
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( -5.96509, 62.0517 )
+shape = SubResource( 3 )
+
 [connection signal="action_selected" from="CombatMenu" to="." method="_on_CombatMenu_action_selected"]
+[connection signal="open_inventory" from="CombatMenu" to="." method="_on_CombatMenu_open_inventory"]
 [connection signal="die" from="StatBlock" to="." method="_on_StatBlock_die"]
 [connection signal="health_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_health_changed"]
 [connection signal="mana_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_mana_changed"]
 [connection signal="stamina_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_stamina_changed"]
+[connection signal="input_event" from="Area2D" to="." method="_on_Area2D_input_event"]

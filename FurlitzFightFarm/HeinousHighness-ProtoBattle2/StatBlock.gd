@@ -46,6 +46,9 @@ func set_mana(new_mana):
 	mana = new_mana
 	emit_signal("mana_changed", new_mana)
 
+func get_mana():
+	return mana
+
 func set_strength(new_strength):
 	strength = new_strength
 

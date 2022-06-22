@@ -1,9 +1,8 @@
 extends Node
 
 
-# Declare member variables here. Examples:
-# var a: int = 2
-# var b: String = "text"
+
+
 var local_id: String = "as0001"
 var local_name: String = "Punch"
 
@@ -21,6 +20,13 @@ func get_id() -> String:
 	
 func get_name() -> String:
 	return local_name
+	
+#this might not work check later
+func cost_check(user_stats):
+	var results = [true, "Stamina"]
+	if user_stats.get_stamina() < cost:
+		results[0] = false
+	return results
 	
 func perform(user_stats):
 	user_stats.set_stamina(user_stats.get_stamina() - cost)

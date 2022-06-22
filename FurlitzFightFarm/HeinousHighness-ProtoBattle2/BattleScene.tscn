@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://PartyCharacter.tscn" type="PackedScene" id=1]
 [ext_resource path="res://BattleScene.gd" type="Script" id=2]
 [ext_resource path="res://EnemyCharacter.tscn" type="PackedScene" id=3]
+[ext_resource path="res://PartyInventory.tscn" type="PackedScene" id=4]
 
 [sub_resource type="DynamicFontData" id=1]
 font_path = "res://Fonts/ltromatic.ttf"
@@ -29,5 +30,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="PartyInventory" parent="." instance=ExtResource( 4 )]
+margin_left = 326.268
+margin_top = 251.428
+margin_right = 653.268
+margin_bottom = 338.428
+
 [connection signal="active_action" from="cp0001" to="." method="_on_Sprite_active_action"]
+[connection signal="character_targeted" from="cp0001" to="." method="_on_cp0001_character_targeted"]
+[connection signal="invalid_action" from="cp0001" to="." method="_on_cp0001_invalid_action"]
+[connection signal="open_inventory" from="cp0001" to="." method="_on_cp0001_open_inventory"]
 [connection signal="enemy_targeted" from="ce0001" to="." method="_on_EnemyCharacter_enemy_targeted"]
+[connection signal="selection_made" from="PartyInventory" to="." method="_on_PartyInventory_selection_made"]

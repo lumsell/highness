@@ -8,6 +8,9 @@ extends Node
 var local_id : String = "am0001"
 var local_name : String = "Kazoo"
 
+#Cost is mana
+var cost = 4
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -17,7 +20,13 @@ func get_id():
 	
 func get_name():
 	return local_name
-	
+
+func cost_check(user_stats):
+	var results = [false, "Mana"]
+	if user_stats.get_mana() >= cost:
+		results[0] = true
+	return results
+
 func execute():
 	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
