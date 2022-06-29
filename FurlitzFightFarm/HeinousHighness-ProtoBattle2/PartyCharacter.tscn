@@ -17,8 +17,8 @@ font_data = SubResource( 1 )
 radius = 286.784
 height = 279.536
 
-[node name="Sprite" type="Sprite"]
-position = Vector2( 116.673, 113.844 )
+[node name="PartyCharacter" type="Sprite"]
+position = Vector2( 99.6258, 107.317 )
 scale = Vector2( 0.266412, 0.264645 )
 texture = ExtResource( 1 )
 script = ExtResource( 3 )

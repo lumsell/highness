@@ -11,6 +11,8 @@ var local_name : String = "Block"
 #Cost is stamina
 var cost = 3
 
+var row_limit = 2 #usable in both front or back row
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -26,6 +28,9 @@ func cost_check(user_stats):
 	if user_stats.get_stamina() >= cost:
 		results[0] = true
 	return results
+	
+func get_row_limit():
+	return row_limit
 	
 func execute():
 	pass

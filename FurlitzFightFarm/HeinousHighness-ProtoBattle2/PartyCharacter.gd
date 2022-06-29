@@ -10,20 +10,23 @@ signal invalid_action(reason)
 signal open_inventory()
 signal character_targeted(character_id)
 
+enum Column{FRONT, BACK}
+var current_row
+
 # These arrays are used to generate the character's ActionMenu
 # ATM they're stand-ins that don't actually mean anything and this whole system
 # will likely be changed when actual Action nodes are added
 
 # this String array is used to generate all the ActionButtons - not yet though,
 # will need to be updated
-var action_categories = ["Attack", "Defend", "Magic", "Use Item"]
+var action_categories = ["Attack", "Defend", "Magic", "Skill"]
 # these String arrays are used to generate ActionLists for each ActionButton
 # old, will remove later
 var attack_array = ["Slap", "Punch", "Insult"]
 var defend_array = ["Block", "Duck", "Beg"]
 var magic_array = ["Abracadabra", "Skiddadle skidoodle", "zoot suit"]
 
-var available_actions = ["as0001", "ad0001", "am0001"]
+var available_actions = ["aa0001", "ad0001", "am0001"]
 
 var health = 15
 var stamina = 15
@@ -35,6 +38,8 @@ var character_id
 # Generates and shows the active character's action menu
 func _ready() -> void:
 	character_id = "cp0001"
+	
+	current_row = 0
 	
 	$StatBlock.build(health, stamina, mana, strength)
 	
@@ -68,6 +73,13 @@ func end_turn():
 
 func start_turn():
 	$CombatMenu.show()
+
+#is enumerated type the best way to do this? can that go across nodes?
+func change_row():
+	#using an int as a switch makes changing simple by modular arithmetic,
+	#but type might confuse something later? idk, be careful how the var is used
+	current_row = (current_row + 1) % 2
+	$CombatMenu.switch_type(current_row)
 
 # Recieves the CombatMenu's "action_selected" signal and forwards it to the
 # BattleController

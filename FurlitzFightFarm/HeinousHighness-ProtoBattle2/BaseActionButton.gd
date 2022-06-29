@@ -1,16 +1,11 @@
 extends Button
 
-var action_list
+var action_lists = [0, 1]
 
 signal selection_made(selection_sig)
 
 var signature
 var id
-
-# Declare member variables here. Examples:
-# var a: int = 2
-# var b: String = "text"
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -31,8 +26,16 @@ func get_id():
 func _on_BaseActionButton_pressed() -> void:
 	emit_signal("selection_made", id)
 
-func set_action_list(new_action_list):
-	action_list = new_action_list
+func set_action_lists(new_front_list, new_back_list):
+	action_lists[0] = new_back_list
+	action_lists[1] = new_front_list
 
-func get_action_list():
-	return action_list
+func get_action_list(row):
+	return action_lists[row]
+
+func add_action_node(action):
+	if action.get_row_limit() == 2:
+		action_lists[0].add_node(action)
+		action_lists[1].add_node(action)
+	else:
+		action_lists[action.get_row_limit()].add_node(action)
