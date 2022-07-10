@@ -65,6 +65,7 @@ shape = SubResource( 3 )
 
 [connection signal="action_selected" from="CombatMenu" to="." method="_on_CombatMenu_action_selected"]
 [connection signal="open_inventory" from="CombatMenu" to="." method="_on_CombatMenu_open_inventory"]
+[connection signal="reformat" from="CombatMenu" to="." method="_on_CombatMenu_reformat"]
 [connection signal="die" from="StatBlock" to="." method="_on_StatBlock_die"]
 [connection signal="health_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_health_changed"]
 [connection signal="mana_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_mana_changed"]

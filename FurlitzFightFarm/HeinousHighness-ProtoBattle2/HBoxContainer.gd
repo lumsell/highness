@@ -36,6 +36,7 @@ var formation = -2
 var button_array = [attack_index, defend_index, magic_index, skill_index]
 
 var formation_array = ["ax0001", "ax0002", "ax0003"]
+var formation_nodes = Array()
 var formation_list #janky temp solution, used for the universal formation options
 
 var row
@@ -93,6 +94,7 @@ func add_action_buttons(category_array):
 	for option in formation_array:
 		var formation_node = load("res://" + option + ".tscn").instance()
 		formation_list.add_node(formation_node)
+		formation_nodes.append(formation_node)
 	formation_list.connect("item_selected", self, "_on_FormationList_item_selected")
 		
 
@@ -137,7 +139,7 @@ func _on_ActionButton_selection_made(button_id):
 		if button_id == inventory:
 			emit_signal("open_inventory")
 		elif button_id == formation:
-			reconfigure((row + 1) % 2)
+			#reconfigure((row + 1) % 2)
 			current_list = formation_list
 			$ListContainer.add_child(current_list)
 
@@ -162,10 +164,10 @@ func _on_ActionList_item_selected(index):
 	emit_signal("action_selected", selected_ability)
 
 func _on_FormationList_item_selected(index):
-	var formation_action_id = current_list.get_id_at(index)
-	print(current_list.get_id_at(index))
+	var formation_action = formation_nodes[index]
+	print("From formation list, selected: " + formation_action.get_id())
 	#should probably add an option to confirm the reformat
-	emit_signal("reformat", formation_action_id)
+	emit_signal("reformat", formation_action)
 
 func _on_StatBlock_health_changed(new_health) -> void:
 	pass # Replace with function body.

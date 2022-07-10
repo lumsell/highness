@@ -9,9 +9,26 @@ signal active_action(action_id)
 signal invalid_action(reason)
 signal open_inventory()
 signal character_targeted(character_id)
+signal move_party(move_pattern, origin_row, origin_line)
 
-enum Column{FRONT, BACK}
 var current_row
+var current_line
+
+#positions
+var back_top = Vector2(1, 1)
+var back_mid = Vector2(1, 2.75)
+var back_low = Vector2(1, 4.5)
+
+var front_top = Vector2(2, 1)
+var front_mid = Vector2(2, 2.75)
+var front_low = Vector2(2, 4.5)
+
+var positions = [[back_top, back_mid, back_low],[front_top, front_mid, front_low]]
+
+#maybe don't use these might be bad
+var formation_arrows
+var active_action
+#var formation_arrow = preload("res://PositionArrow.tscn")
 
 # These arrays are used to generate the character's ActionMenu
 # ATM they're stand-ins that don't actually mean anything and this whole system
@@ -37,14 +54,18 @@ var character_id
 
 # Generates and shows the active character's action menu
 func _ready() -> void:
-	character_id = "cp0001"
 	
 	current_row = 0
+	current_line = 0
 	
 	$StatBlock.build(health, stamina, mana, strength)
 	
 	build_combat_menu(action_categories, available_actions)
 	$CombatMenu.show()
+
+#temporary, should be replaced by a fuller build_character function later
+func set_id(new_id):
+	character_id = new_id
 
 func build_combat_menu(action_categories, total_action_list):
 	
@@ -75,11 +96,19 @@ func start_turn():
 	$CombatMenu.show()
 
 #is enumerated type the best way to do this? can that go across nodes?
-func change_row():
+func reposition(row_num, line_num):
 	#using an int as a switch makes changing simple by modular arithmetic,
 	#but type might confuse something later? idk, be careful how the var is used
-	current_row = (current_row + 1) % 2
-	$CombatMenu.switch_type(current_row)
+	print("Repositioning: " + character_id)
+	
+	print ("x: " + str(get_viewport_rect().size.x) + ", y: " + str(get_viewport_rect().size.y) )
+	var res_modifier = Vector2(get_viewport_rect().size.x/10, get_viewport_rect().size.y/6)
+	set_position(positions[row_num][line_num] * res_modifier)
+	
+	current_row = row_num
+	current_line = line_num
+	$CombatMenu.clear_selection()
+	$CombatMenu.reconfigure(current_row)
 
 # Recieves the CombatMenu's "action_selected" signal and forwards it to the
 # BattleController
@@ -100,12 +129,38 @@ func perform_action(action):
 func _on_StatBlock_die() -> void:
 	hide()
 
-
+#Because the inventory is shared between the party characters, it's handled by the BattleController
 func _on_CombatMenu_open_inventory() -> void:
 	emit_signal("open_inventory")
 
-
+#Emits the character_targeted signal to tell the BattleController that this character is now
+#an active target of the player
 func _on_Area2D_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
 		print("click")
 		emit_signal("character_targeted", character_id)
+
+#Gets an array of arrow sprites that represent the available reformation options
+#The arrows in the array are added as children to display, then removed when one is picked
+
+#it might be possible to make this more general, to use for other actions with options
+func _on_CombatMenu_reformat(format_action) -> void:
+	if formation_arrows != null:
+		for arrow in formation_arrows:
+			remove_child(arrow)
+	
+	formation_arrows = format_action.create_options(current_row, current_line)
+	active_action = format_action
+	
+	for arrow in formation_arrows:
+		add_child(arrow)
+		arrow.connect("direction_chosen", self, "_on_PositionArrow_direction_chosen")
+	
+#Emits the move_party signal to the BattleController after all the choices are made
+func _on_PositionArrow_direction_chosen(target_row, target_line):
+	emit_signal("move_party", active_action, target_row, target_line)
+	
+	for arrow in formation_arrows:
+		remove_child(arrow)
+	
+	formation_arrows = null

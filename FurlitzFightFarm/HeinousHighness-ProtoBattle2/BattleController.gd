@@ -16,18 +16,19 @@ var active_character
 var active_selection
 var active_target
 
-enum PositionCol {BACK, FRONT}
-enum PositionRow {TOP, MIDDLE, BOTTOM}
+var front_row
+var back_row
+var party_formation = [back_row, front_row]
 
-var back_top = Vector2(1, 1)
-var back_mid = Vector2(1, 2.75)
-var back_low = Vector2(1, 4.5)
+var back_top
+var back_mid
+var back_low
 
-var front_top = Vector2(2, 1)
-var front_mid = Vector2(2, 2.75)
-var front_low = Vector2(2, 4.5)
+var front_top
+var front_mid
+var front_low
 
-var positions = [back_top, back_mid, back_low, front_top, front_mid, front_low] #
+var positions = [[back_top, back_mid, back_low], [front_top, front_mid, front_low]] #
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var i = 0
@@ -47,21 +48,46 @@ func resize_position():
 	pass
 
 
-func build_battle(party_roster, enemy_roster):
+func build_battle(party_list, enemy_list):
 	var i = 0
+	var j = 0
 	for character_id in party:
 		#var character = load("res://" + character_id + ".tscn")
 		var new_puppet = p_char_template.instance()
 		new_puppet.set_global_scale(Vector2(.2,.2))
 		add_child(new_puppet, true)
 		new_puppet.name = character_id #allows the puppet to be accessed by id
-		new_puppet.set_position(positions[i] * (new_puppet.get_rect().size/10))
+		new_puppet.set_id(character_id)
 		print(get_node(character_id).name) #for testing
-		if i == 1: #in the future, sprite locations should be somehow carried with characters
+		
+		new_puppet.reposition(j, i)
+		new_puppet.connect("move_party", self, "_on_Character_move_party")
+		
+		positions[j][i] = new_puppet
+		
+		if i == 1:
 			new_puppet.set_texture(frodo_image)
-			new_puppet.set_position(positions[4] * (new_puppet.get_rect().size/10))
 		if i == 2:
 			new_puppet.set_texture(aristotle_image)
-		print(new_puppet.get_rect().size) #for testing
+		print("Position array size: " + str(positions[j].size()))
 		i += 1
+		j = (j + 1) % 2
 		
+#Changes the party's formation when a movement action is selected
+#The Formation is tracked with the 2D array positions. The positions matrix
+	#can be passed to the movement_action's execute function, which will generate
+	#new positions to represent the movement
+func _on_Character_move_party(movement_action, target_row, target_line):
+	#The execute function needs to know the target row and line, which comes from
+		#the option arrow that the player chooses. The origin row and line are also
+		#required, but the movement node saves them when generating the option arrows
+	positions = movement_action.execute(positions, target_row, target_line)
+	#remember to enable this line once the active character is a thing
+	#active_character.perform_action(movement_action)
+	
+	for i in 2:
+		for n in 3:
+			if positions[i][n] != null:
+				positions[i][n].reposition(i, n)
+	
+	
