@@ -25,7 +25,7 @@ func get_name():
 	
 func cost_check(user_stats):
 	var results = [false, "Stamina"]
-	if user_stats.get_stamina() >= cost:
+	if user_stats.get_ap() >= cost:
 		results[0] = true
 	return results
 	

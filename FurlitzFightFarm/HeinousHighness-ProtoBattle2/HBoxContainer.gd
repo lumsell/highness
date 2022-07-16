@@ -8,7 +8,7 @@ extends HBoxContainer
 # Sent when the player clicks on an item in an ActionList
 # returns action_name the ID of the selected action, for now just its name
 signal action_selected(action_name)
-signal open_inventory()
+signal button_pressed(button_id)
 signal reformat(format_action)
 
 # BaseActionButton and BaseActionList are generic scene nodes with the premade
@@ -123,7 +123,7 @@ func reconfigure(new_row):
 # Brings up the corresponding AbilityList when an ActionButton is pressed
 func _on_ActionButton_selection_made(button_id):
 	print(button_id)
-	
+	emit_signal("button_pressed", button_id)
 	# if there's a list currently being displayed, its removed and its selection
 	# is clread
 	if current_list != null:
@@ -137,7 +137,8 @@ func _on_ActionButton_selection_made(button_id):
 	#	current_type = (current_type + 1) % 2
 	if button_id < 0:
 		if button_id == inventory:
-			emit_signal("open_inventory")
+			pass
+			#emit_signal("open_inventory")
 		elif button_id == formation:
 			#reconfigure((row + 1) % 2)
 			current_list = formation_list
@@ -158,10 +159,10 @@ func clear_selection():
 # Sends the "action_selected" signal when the player clicks on an item from an
 # ActionList
 func _on_ActionList_item_selected(index):
-	var selected_ability = current_list.get_id_at(index)
-	selected_ability = selected_ability
-	print("From Combat Menu: " + selected_ability)
-	emit_signal("action_selected", selected_ability)
+	var selected_ability_id = current_list.get_id_at(index)
+	var selected_action = load("res://" + selected_ability_id + ".tscn").instance()
+	print("From Combat Menu: " + selected_action.get_id())
+	emit_signal("action_selected", selected_action)
 
 func _on_FormationList_item_selected(index):
 	var formation_action = formation_nodes[index]

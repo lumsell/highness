@@ -5,6 +5,7 @@ extends Node
 # var a: int = 2
 # var b: String = "text"
 var p_char_template = preload("res://PartyCharacter.tscn")
+var e_char_template = preload("res://EnemyCharacter.tscn")
 
 var party = ["cp0001", "cp0002", "cp0003"]
 var enemies = ["ce0001", "ce0002", "ce0003"]
@@ -12,8 +13,10 @@ var enemies = ["ce0001", "ce0002", "ce0003"]
 var frodo_image = preload("res://ArtAssets/frodo_static.png")
 var aristotle_image = preload("res://ArtAssets/aristotle_static.png")
 
+
+
 var active_character
-var active_selection
+var active_action
 var active_target
 
 var front_row
@@ -51,7 +54,7 @@ func resize_position():
 func build_battle(party_list, enemy_list):
 	var i = 0
 	var j = 0
-	for character_id in party:
+	for character_id in party_list:
 		#var character = load("res://" + character_id + ".tscn")
 		var new_puppet = p_char_template.instance()
 		new_puppet.set_global_scale(Vector2(.2,.2))
@@ -62,17 +65,52 @@ func build_battle(party_list, enemy_list):
 		
 		new_puppet.reposition(j, i)
 		new_puppet.connect("move_party", self, "_on_Character_move_party")
+		new_puppet.connect("active_action", self, "_on_Character_active_action")
 		
 		positions[j][i] = new_puppet
 		
 		if i == 1:
 			new_puppet.set_texture(frodo_image)
+			active_character = new_puppet
 		if i == 2:
 			new_puppet.set_texture(aristotle_image)
 		print("Position array size: " + str(positions[j].size()))
 		i += 1
 		j = (j + 1) % 2
 		
+	
+	i = 0
+	for character_id in enemy_list:
+		var new_puppet = e_char_template.instance()
+		new_puppet.set_global_scale(Vector2(.2,.2))
+		add_child(new_puppet, true)
+		
+		new_puppet.connect("enemy_targeted", self, "_on_Character_character_targeted")
+		
+		#this might become a problem later, if enemies of same type are in same battle with same ID
+		new_puppet.name = character_id
+		new_puppet.set_id(character_id)
+		new_puppet.reposition(1, i)
+		i += 1
+		#new_puppet.set_texture
+
+func next_turn():
+	active_character.end_turn()
+	active_action = null
+	active_target = null
+	
+
+func _on_Character_active_action(action):
+	active_action = action
+		
+func _on_Character_character_targeted(target_id):
+	active_target = get_node(target_id)
+	if active_action == null:
+		print("Targeted " + target_id)
+	else:
+		active_character.perform_action(active_action)
+		active_target.apply_action(active_action)
+		next_turn()
 #Changes the party's formation when a movement action is selected
 #The Formation is tracked with the 2D array positions. The positions matrix
 	#can be passed to the movement_action's execute function, which will generate

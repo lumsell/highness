@@ -24,8 +24,8 @@ func get_name():
 	return local_name
 
 func cost_check(user_stats):
-	var results = [false, "Mana"]
-	if user_stats.get_mana() >= cost:
+	var results = [false, "AP"]
+	if user_stats.get_ap() >= cost:
 		results[0] = true
 	return results
 

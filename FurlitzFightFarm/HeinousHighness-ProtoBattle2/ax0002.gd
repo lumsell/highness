@@ -26,8 +26,8 @@ func get_row_limit():
 	
 #this might not work check later
 func cost_check(user_stats):
-	var results = [true, "Stamina"]
-	if user_stats.get_stamina() < cost:
+	var results = [true, "AP"]
+	if user_stats.get_ap() < cost:
 		results[0] = false
 	return results
 	
@@ -55,7 +55,7 @@ func create_options(character_row, character_line):
 	return [arrow_one, arrow_two]
 	
 func perform(user_stats):
-	user_stats.set_stamina(user_stats.get_stamina() - cost)
+	user_stats.set_ap(user_stats.get_ap() - cost)
 	
 func execute(position_matrix, target_row, target_line):
 	print("Executing: " + local_name)
