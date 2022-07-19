@@ -6,7 +6,6 @@ extends Sprite
 # Sent to the BattleController to tell it the ID of the player's currently
 # selected action
 signal active_action(action_id)
-signal invalid_action(reason)
 signal open_inventory()
 signal character_targeted(character_id)
 signal move_party(move_pattern, origin_row, origin_line)
@@ -36,7 +35,7 @@ var active_action
 
 # this String array is used to generate all the ActionButtons - not yet though,
 # will need to be updated
-var action_categories = ["Attack", "Defend", "Magic", "Skill"]
+var action_category_array = ["Attack", "Defend", "Magic", "Skill"]
 # these String arrays are used to generate ActionLists for each ActionButton
 # old, will remove later
 
@@ -47,17 +46,20 @@ var ap = 15
 var strength = 3
 
 var character_id
+var alive
 
 # Generates and shows the active character's action menu
 func _ready() -> void:
+	
+	alive = true
 	
 	current_row = 0
 	current_line = 0
 	
 	$StatBlock.build(health, ap, strength)
 	
-	build_combat_menu(action_categories, available_actions)
-	$CombatMenu.show()
+	build_combat_menu(action_category_array, available_actions)
+	$CombatMenu.hide()
 	
 #temporary, should be replaced by a fuller build_character function later
 func set_id(new_id):
@@ -67,12 +69,11 @@ func build_combat_menu(action_categories, total_action_list):
 	
 	$CombatMenu.add_action_buttons(action_categories)
 	
-	for action in total_action_list:
-		var action_scene = load("res://" + action + ".tscn")
-		var action_node = action_scene.instance()
+	for action in total_action_list: 
+		var action_node = load("res://" + action + ".tscn").instance()
 		$CombatMenu.add_action(action_node)
-		
 		print("added " + action)
+		action_node.queue_free()
 
 # I think this is an old tester function that doesn't do anything anymore but
 # I'm scared to delete it
@@ -110,22 +111,13 @@ func reposition(row_num, line_num):
 # It's useful for now because atm, CombatMenus are generated individually by
 # the characters, but this might change depending on how we handle Action Nodes
 func _on_CombatMenu_action_selected(action):
-		#maybe cut this and make the cost check part of create_options?
-	if active_action != null:
-		remove_child(active_action)
+	#TODO: add a cost check functionality into the general create_options method
+	clear_action()
 	
 	active_action = action
 	add_child(action)
 	active_action.connect("action_ready", self, "_on_ActiveAction_action_ready")
 	var results = action.cost_check($StatBlock)
-	
-	#This is used to change the strength of an attack, and since most of the
-	#functionality is in the actions themselves it may be flexible enough to do
-	#other things if we need it to
-	
-	if action_options != null:
-		for option in action_options:
-			remove_child(option)
 	
 	action.create_options($StatBlock)
 	action.position.x = get_rect().size.x * 1.3
@@ -134,13 +126,19 @@ func _on_ActiveAction_action_ready():
 	if active_action.cost_check($StatBlock)[0]:
 		emit_signal("active_action", active_action)
 
-func perform_action(action):
-	action.perform($StatBlock)
+func perform_action():
+	active_action.perform($StatBlock)
+	clear_action()
 	$CombatMenu.clear_selection()
-	remove_child(active_action)
-	active_action = null
+
+func clear_action():
+	if active_action != null:
+		remove_child(active_action)
+		active_action.queue_free()
+		active_action = null
 
 func _on_StatBlock_die() -> void:
+	alive = false
 	hide()
 
 #Emits the character_targeted signal to tell the BattleController that this character is now
@@ -155,34 +153,20 @@ func _on_Area2D_input_event(viewport: Node, event: InputEvent, shape_idx: int) -
 
 #it might be possible to make this more general, to use for other actions with options
 func _on_CombatMenu_reformat(format_action) -> void:
-	#TODO: get rid of action_options, change the format actions to Node2Ds and add them as children instead
-	#be carfeul about the arrows, that might get weird when it changes
-	if action_options != null:
-		for arrow in action_options:
-			remove_child(arrow)
+	clear_action()
 	
-	action_options = format_action.create_options(current_row, current_line)
 	active_action = format_action
-	
-	for arrow in action_options:
-		add_child(arrow)
-		arrow.connect("direction_chosen", self, "_on_PositionArrow_direction_chosen")
+	active_action.create_options(current_row, current_line)
+	add_child(active_action)
+
+	active_action.connect("action_ready", self, "_on_FormatAction_action_ready")
 	
 #Emits the move_party signal to the BattleController after all the choices are made
-func _on_PositionArrow_direction_chosen(target_row, target_line):
-	emit_signal("move_party", active_action, target_row, target_line)
-	
-	for arrow in action_options:
-		remove_child(arrow)
-	
-	action_options = null
+func _on_FormatAction_action_ready():
+	emit_signal("move_party", active_action)
 
-
-func _on_CombatMenu_button_pressed(button_id) -> void:
-	if active_action != null:
-		remove_child(active_action)
-		active_action = null
-		
+func _on_CombatMenu_button_pressed(button_name) -> void:
+	clear_action()
 	#this part might be necessary, if the character could have a pointer to the inventory
-	if button_id == $CombatMenu.inventory:
+	if button_name == "Item":
 		emit_signal("open_inventory")

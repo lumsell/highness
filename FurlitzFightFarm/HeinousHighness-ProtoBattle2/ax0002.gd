@@ -1,7 +1,6 @@
-extends Node
+extends Node2D
 
-
-
+signal action_ready()
 
 var local_id: String = "ax0002"
 var local_name: String = "Cycle"
@@ -12,6 +11,9 @@ var cost = 1
 
 var origin_row
 var origin_line
+
+var target_row
+var target_line
 
 var base_arrow = preload("res://PositionArrow.tscn")
 
@@ -52,12 +54,21 @@ func create_options(character_row, character_line):
 	
 	arrow_two.reposition(origin_row, origin_line)
 	
-	return [arrow_one, arrow_two]
+	add_child(arrow_one)
+	add_child(arrow_two)
+	
+	arrow_one.connect("direction_chosen", self, "_on_Arrow_direction_chosen")
+	arrow_two.connect("direction_chosen", self, "_on_Arrow_direction_chosen")
+	
+func _on_Arrow_direction_chosen(row, line):
+	target_row = row
+	target_line = line
+	emit_signal("action_ready")
 	
 func perform(user_stats):
 	user_stats.set_ap(user_stats.get_ap() - cost)
 	
-func execute(position_matrix, target_row, target_line):
+func execute(position_matrix):
 	print("Executing: " + local_name)
 	var ret_matrix = [[null, null, null], [null, null, null]]
 	

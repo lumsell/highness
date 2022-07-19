@@ -29,7 +29,6 @@ margin_right = -5.98163
 margin_bottom = 535.44
 
 [connection signal="input_event" from="Area2D" to="." method="_on_Area2D_input_event"]
+[connection signal="ap_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_ap_changed"]
 [connection signal="die" from="StatBlock" to="." method="_on_StatBlock_die"]
 [connection signal="health_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_health_changed"]
-[connection signal="mana_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_mana_changed"]
-[connection signal="stamina_changed" from="StatBlock" to="StatDisplay" method="_on_StatBlock_stamina_changed"]

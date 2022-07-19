@@ -1,29 +1,20 @@
 extends ItemList
 
 
-# Declare member variables here. Examples:
-# var a: int = 2
-# var b: String = "text"
-
-var id
 
 var id_list = Array()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	hide()
+	name = "ActionList"
 
-func set_id(new_id):
-	id = new_id
-
-func get_id():
-	var ret_val
-	ret_val = id
-	return ret_val
-
-func load_items(items):
-	for item in items:
-		add_item(item)
+func reset_actions(action_array):
+	clear()
+	id_list = []
+	for action in action_array:
+		add_item(action[0])
+		id_list.append(action[1])
 
 func get_id_at(index):
 	var item_id = id_list[index]

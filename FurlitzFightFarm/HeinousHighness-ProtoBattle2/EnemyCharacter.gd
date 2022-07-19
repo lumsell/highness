@@ -3,6 +3,8 @@ extends Sprite
 # Returns the character's ID to let the BattleController know what the player
 # is targetting
 signal enemy_targeted(id)
+signal enemy_action(action)
+
 
 var local_id: String = "ce0001"
 var health = 15
@@ -19,11 +21,22 @@ var front_low = Vector2(2, 4.5)
 
 var positions = [[back_top, back_mid, back_low],[front_top, front_mid, front_low]]
 
+var alive
+
 func _ready() -> void:
+	alive = true
 	$StatBlock.build(health, ap, strength)
 
 func set_id(new_id):
 	local_id = new_id
+
+	
+func start_turn():
+	yield(get_tree().create_timer(3.0), "timeout")
+	emit_signal("enemy_action", "placeholder")
+
+func end_turn():
+	pass
 
 func reposition(new_row, new_line):
 	var modifier_x = get_viewport_rect().size.x
@@ -44,4 +57,5 @@ func apply_action(action):
 
 
 func _on_StatBlock_die() -> void:
+	alive = false
 	hide()

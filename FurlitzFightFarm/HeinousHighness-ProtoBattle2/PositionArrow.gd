@@ -4,7 +4,7 @@ extends Sprite
 # Declare member variables here. Examples:
 # var a: int = 2
 # var b: String = "text"
-signal direction_chosen(modifier)
+signal direction_chosen(row, line)
 
 var target_row
 var target_line

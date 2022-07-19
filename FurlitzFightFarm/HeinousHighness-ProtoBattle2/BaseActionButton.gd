@@ -1,41 +1,34 @@
 extends Button
 
-var action_lists = [0, 1]
+signal selection_made(selection_name)
 
-signal selection_made(selection_sig)
+var action_array = [[],[]]
 
-var signature
-var id
+var local_index
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
 
 func set_signature(new_sig):
-	signature = new_sig
-	text = signature
+	text = new_sig
+	name = new_sig
 
-func set_id(new_id):
-	id = new_id
+func set_local_index(new_index):
+	local_index = new_index
 	
-func get_id():
-	var ret_val
-	ret_val = id
-	return ret_val
+func get_local_index():
+	return local_index
+	
+func get_action_array(row):
+	return action_array[row]
 	
 func _on_BaseActionButton_pressed() -> void:
-	emit_signal("selection_made", id)
-
-func set_action_lists(new_front_list, new_back_list):
-	action_lists[0] = new_back_list
-	action_lists[1] = new_front_list
-
-func get_action_list(row):
-	return action_lists[row]
+	emit_signal("selection_made", name)
 
 func add_action_node(action):
 	if action.get_row_limit() == 2:
-		action_lists[0].add_node(action)
-		action_lists[1].add_node(action)
+		action_array[0].append([action.get_name(), action.get_id()])
+		action_array[1].append([action.get_name(), action.get_id()])
 	else:
-		action_lists[action.get_row_limit()].add_node(action)
+		action_array[action.get_row_limit()].append([action.get_name(),action.get_id()])
