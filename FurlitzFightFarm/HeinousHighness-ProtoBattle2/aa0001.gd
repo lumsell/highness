@@ -30,21 +30,27 @@ func get_row_limit():
 	
 func create_options(user_stats):
 	#damage = base_damage
-	
+	var cost_check = user_stats.get_ap() - cost
 	$OptionOne.set_value(1)
-	$OptionTwo.set_value(2)
-	$OptionThree.set_value(3)
-	
 	selected_option = $OptionOne
-	$OptionOne.select()
-	emit_signal("action_ready")
+	if cost_check < 0:
+		print("Not enough AP")
+	else:
+		$OptionOne.show()
+		
+		if cost_check >= 1:
+			$OptionTwo.set_value(2)
+			$OptionTwo.show()
+		if cost_check >= 2:
+			$OptionThree.set_value(3)
+			$OptionThree.show()
+	
+		$OptionOne.select()
+		emit_signal("action_ready")
 	
 #this might not be necessary, try to fold into the create_option function
 func cost_check(user_stats):
-	var results = [true, "AP"]
-	if user_stats.get_ap() < cost:
-		results[0] = false
-	return results
+	return user_stats.get_ap() > cost
 	
 func perform(user_stats):
 	user_stats.set_ap(user_stats.get_ap() - cost - selected_option.get_value())

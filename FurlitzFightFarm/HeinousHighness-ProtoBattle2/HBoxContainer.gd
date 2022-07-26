@@ -48,7 +48,7 @@ var formation_list #janky temp solution, used for the universal formation option
 var row
 # Sets up and initially hides the empty combat menu until the character fills it
 func _ready() -> void:
-	
+	action_list.hide()
 	row = 1
 	#hide()
 

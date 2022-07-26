@@ -16,6 +16,7 @@ func _ready() -> void:
 	
 	#be a little worried about this, might get weird with resolutions idk
 	#scale = scale * .2
+	hide()
 	modulate.a = .75
 	
 	scale_unselected = scale

@@ -19,8 +19,12 @@ func next_character():
 	while i < roster_array.size():
 		var next_character = roster_array[next_index]
 		next_index = (next_index + 1) % roster_array.size()
-		if next_character.alive:
-			return next_character
+		var failsafe = 0
+		while (not next_character.alive) and failsafe < roster_array.size():
+			next_character = roster_array[next_index]
+			next_index = (next_index + 1) % roster_array.size()
+		
+		return next_character
 		
 	
 

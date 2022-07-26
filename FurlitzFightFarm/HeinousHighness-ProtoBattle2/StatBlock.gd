@@ -15,6 +15,8 @@ var h_max
 var ap_min
 var ap_max
 
+var inventory_pointer
+
 func _ready() -> void:
 	pass
 	
@@ -24,10 +26,10 @@ func build(in_health, in_ap, in_strength):
 	ap_max = in_ap
 	set_ap(in_ap)
 	set_strength(in_strength)
-	
 
 func set_health(new_health):
 	health = min(new_health, h_max)
+	health = max(health, 0)
 	if health <= 0:
 		emit_signal("die")
 	emit_signal("health_changed", health)
@@ -36,7 +38,8 @@ func get_health():
 	return health
 
 func set_ap(new_ap):
-	ap = min(new_ap, ap_max)
+	#ap = min(new_ap, ap_max)
+	ap = max(new_ap, 0)
 	emit_signal("ap_changed", ap)
 
 func get_ap():

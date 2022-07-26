@@ -6,8 +6,8 @@ extends Sprite
 # Sent to the BattleController to tell it the ID of the player's currently
 # selected action
 signal active_action(action_id)
-signal open_inventory()
 signal character_targeted(character_id)
+signal character_dead(character_id)
 signal move_party(move_pattern, origin_row, origin_line)
 
 var current_row
@@ -63,6 +63,7 @@ func _ready() -> void:
 	
 #temporary, should be replaced by a fuller build_character function later
 func set_id(new_id):
+	name = new_id
 	character_id = new_id
 
 func build_combat_menu(action_categories, total_action_list):
@@ -81,10 +82,14 @@ func set_available_actions(action_set):
 	for action in action_set:
 		print("adding action")
 		$CombatMenu.add_action_button(action)
+		
+func link_inventory(shared_inventory):
+	$StatBlock.inventory_pointer = shared_inventory
 
 # Hides the character's CombatMenu when its turn ends
 # Not used yet, will be important when turns are actually ended
 func end_turn():
+	clear_action()
 	$CombatMenu.clear_selection()
 	$CombatMenu.hide()
 
@@ -111,24 +116,24 @@ func reposition(row_num, line_num):
 # It's useful for now because atm, CombatMenus are generated individually by
 # the characters, but this might change depending on how we handle Action Nodes
 func _on_CombatMenu_action_selected(action):
-	#TODO: add a cost check functionality into the general create_options method
+
 	clear_action()
 	
 	active_action = action
 	add_child(action)
 	active_action.connect("action_ready", self, "_on_ActiveAction_action_ready")
-	var results = action.cost_check($StatBlock)
 	
 	action.create_options($StatBlock)
 	action.position.x = get_rect().size.x * 1.3
 
 func _on_ActiveAction_action_ready():
-	if active_action.cost_check($StatBlock)[0]:
-		emit_signal("active_action", active_action)
+	emit_signal("active_action", active_action)
+
+func apply_action(action):
+	action.execute($StatBlock)
 
 func perform_action():
 	active_action.perform($StatBlock)
-	clear_action()
 	$CombatMenu.clear_selection()
 
 func clear_action():
@@ -138,8 +143,13 @@ func clear_action():
 		active_action = null
 
 func _on_StatBlock_die() -> void:
+	
+	#TODO emit a signal telling the BattleController to remove you
+	
 	alive = false
-	hide()
+	$StatDisplay.hide()
+	emit_signal("character_dead", character_id)
+	set_rotation(PI/2)
 
 #Emits the character_targeted signal to tell the BattleController that this character is now
 #an active target of the player
@@ -167,6 +177,13 @@ func _on_FormatAction_action_ready():
 
 func _on_CombatMenu_button_pressed(button_name) -> void:
 	clear_action()
-	#this part might be necessary, if the character could have a pointer to the inventory
+	#TODO maybe if i feel like it; make it close if clicked twice in a row, for consistency
+	#though this entire setup might be needlessly complicated, see how it goes later
 	if button_name == "Item":
-		emit_signal("open_inventory")
+		active_action = Node2D.new()
+		var list_container = Container.new()
+		list_container.add_child($StatBlock.inventory_pointer.build_handout_list())
+		active_action.add_child(list_container)
+		active_action.position.x = get_rect().size.x * .76
+		active_action.position.y = $CombatMenu.get_rect().position.y
+		add_child(active_action)

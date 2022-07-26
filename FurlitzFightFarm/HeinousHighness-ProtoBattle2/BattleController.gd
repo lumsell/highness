@@ -10,6 +10,8 @@ var e_char_template = preload("res://EnemyCharacter.tscn")
 var party = ["cp0001", "cp0002", "cp0003"]
 var enemies = ["ce0001", "ce0002", "ce0003"]
 
+var inventory_array = [["AP Potion", "ic0001", 4]]
+
 var frodo_image = preload("res://ArtAssets/frodo_static.png")
 var aristotle_image = preload("res://ArtAssets/aristotle_static.png")
 
@@ -31,15 +33,21 @@ var front_top
 var front_mid
 var front_low
 
-var positions = [[back_top, back_mid, back_low], [front_top, front_mid, front_low]] #
+var positions = [[back_top, back_mid, back_low], [front_top, front_mid, front_low]]
+var enemy_positions = Array()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	randomize()
 	var i = 0
 	var k = 0
 	while i < 10:
 		k = (k + 1) % 2
 		print(k)
 		i += 1
+	
+	$Announcer.hide()
+	$Announcer.text = "Startup"
+	$PartyInventory.load_items(inventory_array)
 	build_battle(party, enemies)
 	#get_tree().get_root().connect("size_changed", self, "resize_position()")
 
@@ -59,13 +67,15 @@ func build_battle(party_list, enemy_list):
 		var new_puppet = p_char_template.instance()
 		new_puppet.set_global_scale(Vector2(.2,.2))
 		add_child(new_puppet, true)
-		new_puppet.name = character_id #allows the puppet to be accessed by id
+		 #allows the puppet to be accessed by id
 		new_puppet.set_id(character_id)
 		print(get_node(character_id).name) #for testing
 		
 		new_puppet.reposition(j, i)
+		new_puppet.link_inventory($PartyInventory)
 		new_puppet.connect("move_party", self, "_on_Character_move_party")
 		new_puppet.connect("active_action", self, "_on_Character_active_action")
+		new_puppet.connect("character_dead", self, "_on_Character_character_dead")
 		
 		$Roster.add_character(new_puppet)
 		
@@ -88,10 +98,13 @@ func build_battle(party_list, enemy_list):
 		
 		new_puppet.connect("enemy_targeted", self, "_on_Character_character_targeted")
 		new_puppet.connect("enemy_action", self, "_on_Enemy_enemy_action")
+		new_puppet.connect("enemy_dead", self, "_on_Enemy_enemy_dead")
 		#this might become a problem later, if enemies of same type are in same battle with same ID
-		new_puppet.name = character_id
+		#new_puppet.name = character_id
 		new_puppet.set_id(character_id)
 		new_puppet.reposition(1, i)
+		enemy_positions.append(new_puppet)
+		new_puppet.add_to_group("npc")
 		
 		$Roster.add_character(new_puppet)
 		
@@ -107,7 +120,11 @@ func next_turn():
 		active_action = null
 	active_target = null
 	active_character = $Roster.next_character()
-	active_character.start_turn()
+	
+	if active_character.is_in_group("npc"):
+		active_character.start_turn(positions, enemy_positions)
+	else:
+		active_character.start_turn()
 	
 
 func _on_Character_active_action(action):
@@ -143,6 +160,51 @@ func _on_Character_move_party(movement_action):
 	next_turn()
 	
 	
-func _on_Enemy_enemy_action(action):
-	print(action)
+func _on_Enemy_enemy_action(target_character, action):
+	if target_character != null:
+		active_character.perform_action(action)
+		target_character.apply_action(action)
+	next_turn()
+
+func _on_Character_character_dead(character_id):
+	var game_over = true
+	for row in positions:
+		for character in row:
+			if character != null:
+				print("Debug note: " + character.name + "is " + str(character.alive))
+				if character.alive:
+					game_over = false
+					print("game_over is " + str(game_over))
+
+			
+	if game_over:
+		end_battle("Defeat")
+	
+func _on_Enemy_enemy_dead(enemy_id):
+	var game_over = true
+	for character in enemy_positions:
+		if character!= null:
+			if character.alive:
+				game_over = false
+	
+	if game_over:
+		end_battle("Victory")
+
+func end_battle(outcome):
+	for row in positions:
+		for character in row:
+			if character != null:
+				character.hide()
+	for character in enemy_positions:
+		if character != null:
+			character.hide()
+	
+	$Announcer.text = outcome
+	$Announcer.show()
+	print(outcome)
+
+
+func _on_PartyInventory_item_used(item_node) -> void:
+	active_character.apply_action(item_node)
+	item_node.queue_free()
 	next_turn()
